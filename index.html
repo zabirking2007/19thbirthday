@@ -520,7 +520,7 @@ setInterval(() => {
   const correctPass = "19thBirthday"; // 🔑 keep your passcode here
 
   function checkPass() {
-  const input = document.getElementById("passInput").value;
+  const input = document.getElementById("passInput").value.trim();
   const error = document.getElementById("error");
 
   if (input === correctPass) {
@@ -532,6 +532,7 @@ setInterval(() => {
     setTimeout(() => { error.style.display = "none"; }, 3000);
   }
 }
+
 
 
   // Enter key press triggers check
