@@ -249,6 +249,66 @@
 </head>
 <body>
 
+<!-- PASSCODE SCREEN -->
+<div id="lockscreen">
+  <div class="lock-card">
+    <h2>🔐 Enter Passcode</h2>
+    <input type="password" id="passInput" placeholder="Enter passcode">
+    <button onclick="checkPass()">Unlock</button>
+    <p id="error" style="color:red;display:none;">Wrong passcode. Try again!</p>
+  </div>
+</div>
+
+<style>
+  #lockscreen {
+    position: fixed;
+    inset: 0;
+    background: linear-gradient(135deg, #ffdde1, #ee9ca7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+  }
+  .lock-card {
+    background: white;
+    padding: 30px;
+    border-radius: 16px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    text-align: center;
+    font-family: Poppins, sans-serif;
+  }
+  .lock-card input {
+    padding: 10px;
+    width: 200px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    margin-bottom: 12px;
+    outline: none;
+  }
+  .lock-card button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    background: linear-gradient(90deg,#e91e63,#b00047);
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+  }
+</style>
+
+<script>
+  const correctPass = "1905"; // 🔑 change this to your passcode
+
+  function checkPass() {
+    const input = document.getElementById("passInput").value;
+    if (input === correctPass) {
+      document.getElementById("lockscreen").style.display = "none";
+    } else {
+      document.getElementById("error").style.display = "block";
+    }
+  }
+</script>
+
   <!-- NAV -->
   <nav>
     <a href="#reasons">Reasons</a>
