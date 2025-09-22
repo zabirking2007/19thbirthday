@@ -21,15 +21,18 @@
     }
     *{box-sizing:border-box}
     html,body{height:100%}
-    body{
-      margin:0;
-      font-family:"Poppins",sans-serif;
-      background: linear-gradient(180deg,var(--bg1),var(--bg2));
-      color:#222;
-      -webkit-font-smoothing:antialiased;
-      scroll-behavior:smooth;
-      overflow-x:hidden;
-    }
+    body {
+  background: linear-gradient(270deg, #ff9a9e, #fad0c4, #fbc2eb, #a18cd1);
+  background-size: 600% 600%;
+  animation: gradientShift 15s ease infinite;
+}
+
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
 
     /* Container */
     .wrap{max-width:1100px;margin:0 auto;padding:30px;}
@@ -117,17 +120,28 @@
     .timeline-right::after{left:-72px}
 
     /* Gallery */
-    .gallery-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px}
+    .gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+  justify-items: center; /* center content in each grid cell */
+}
+
+
     .polaroid{
       background:#fff;padding:10px;border-radius:12px;box-shadow:0 14px 30px rgba(0,0,0,0.08);
       text-align:center;cursor:pointer;transition:transform .25s;
     }
     .polaroid img {
-  width: 100%;
-  height: auto; /* let the image keep its original aspect ratio */
-  object-fit: contain; /* optional, ensures the whole image fits */
+  width: 100%;          /* fills the polaroid container */
+  max-width: 300px;     /* prevents huge images on big screens */
+  height: auto;         /* maintains aspect ratio */
   border-radius: 8px;
+  object-fit: cover;    /* crops slightly if necessary to fill nicely */
+  display: block;
+  margin: 0 auto;       /* center the image */
 }
+
 
     .polaroid p{margin:8px 0 0;font-size:13px;color:var(--muted)}
 
@@ -135,6 +149,17 @@
     .song{display:flex;flex-direction:column;align-items:center;gap:12px}
 
     /* Envelope */
+    .envelope-wrap {
+  position: relative;
+  z-index: 10; /* above hearts-bg (z-index: 0) */
+}
+.envelope {
+  position: relative;
+  z-index: 11;
+  cursor: pointer;
+}
+
+
     .envelope-wrap{display:flex;justify-content:center;align-items:center;padding:30px 0}
     .envelope{
       width:320px;height:200px;background:linear-gradient(180deg,#fff,#ffeef7);border-radius:12px;
@@ -168,6 +193,14 @@
   max-height: calc(100% + 50px); /* allows it to be bigger than envelope */
   overflow-y: auto; /* scroll if letter is too long */
 }
+@media (max-width:520px){
+  .letter {
+    max-height: 300px; /* restrict height on small screens */
+    padding: 16px;     /* reduce padding to fit mobile */
+    overflow-y: auto;  /* allow vertical scroll if content overflows */
+  }
+}
+
 
 
 
@@ -231,33 +264,56 @@
 
     /* Responsive */
     @media (max-width:900px){
-      .timeline::before{left:20px}
-      .timeline-item{width:100%!important;padding:14px}
-      .timeline-item:nth-child(even){margin-left:40px}
-      .timeline-left,.timeline-right{transform:none;margin:0}
-      .timeline-item::after{left:8px;right:auto}
-    }
+  .timeline::before { left: 20px; }
+  .timeline-item { 
+    width: 100% !important; 
+    padding: 14px; 
+    margin: 0 0 28px 0; /* removes odd/even offsets */
+  }
+  .timeline-item::after { left: 8px; right: auto; }
+  .timeline-left, .timeline-right { transform: none; margin: 0; }
+}
+
     @media (max-width:520px){
       .cover h1{font-size:42px}
       .cta{padding:12px 18px}
       .card{min-height:100px}
     }
 
-    .reveal{opacity:0;transform:translateY(14px);transition:all .6s ease}
-    .reveal.visible{opacity:1;transform:none}
+    .reveal {
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+  pointer-events: none; /* ignore clicks initially */
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto; /* allow clicks once visible */
+}
   </style>
 </head>
 <body>
+  <div id="hearts-bg"></div>
+
 
 <!-- PASSCODE SCREEN -->
 <div id="lockscreen">
   <div class="lock-card">
-    <h2>🔐 Enter Passcode</h2>
-    <input type="password" id="passInput" placeholder="Enter passcode">
-    <button onclick="checkPass()">Unlock</button>
+    <h2>🔐 Enter Your Secret Love Code</h2>
+    <input type="password" id="passInput" placeholder="💖 Type your secret..." autocomplete="off">
+    <label class="show-pass">
+  <input type="checkbox" id="showPass">
+  <span>Show Passcode</span>
+</label>
+
+    <button onclick="checkPass()">Unlock 💌</button>
     <p id="error" style="color:red;display:none;">Wrong passcode. Try again!</p>
   </div>
 </div>
+
+
 
 <style>
   #lockscreen {
@@ -293,28 +349,212 @@
     color: white;
     font-weight: 600;
     cursor: pointer;
+    
   }
+  #passInput {
+  padding: 12px;
+  width: 200px;
+  border: 2px solid #e91e63;
+  border-radius: 8px;
+  margin-bottom: 12px;
+  outline: none;
+  font-size:16px;
+  color:#e91e63;
+  text-align:center;
+  transition: box-shadow 0.3s, transform 0.2s;
+}
+#passInput:focus {
+  box-shadow: 0 4px 12px rgba(233,30,99,0.4);
+  transform: scale(1.02);
+}
+.show-pass {
+  display: flex;
+  align-items: center;
+  justify-content: center; /* centers checkbox + text */
+  margin: 8px 0;
+  font-size: 14px;
+  color: #333;
+  gap: 6px; /* space between checkbox and text */
+}
+.show-pass input {
+  width: 16px;
+  height: 16px;
+  accent-color: #e91e63; /* ❤️ makes checkbox pink */
+}
+#lockscreen {
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+#lockscreen.fade-out {
+  opacity: 0;
+  transform: scale(1.1);
+  pointer-events: none;
+}
+#muteBtn {
+  position: fixed;
+  top: 20px;
+  left: 20px; /* 👈 moved from right to left */
+  background: #e91e63;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 45px;
+  height: 45px;
+  font-size: 20px;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  transition: transform 0.2s, background 0.3s;
+  z-index: 9999;
+}
+#muteBtn:hover {
+  transform: scale(1.1);
+  background: #c2185b;
+}
+
+.fade-in-up {
+  opacity: 0;
+  transform: translateY(30px);
+  animation: fadeInUp 1s ease forwards;
+}
+
+@keyframes fadeInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+button {
+  transition: transform 0.2s, box-shadow 0.3s;
+}
+button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+}
+video {
+  width: 100%;           /* responsive width */
+  max-width: 400px;      /* optional max width for large screens */
+  height: auto;          /* maintain aspect ratio */
+  border-radius: 15px;   /* keep your existing radius */
+  box-shadow: 0 6px 20px rgba(0,0,0,0.3); /* keep your shadow */
+  display: block;
+  margin: 0 auto;        /* center the video in its container */
+}
+
+#hearts-bg {
+  position: fixed;
+  inset: 0;
+  pointer-events: none; /* hearts don’t block clicks */
+  z-index: 0;           /* stays behind all content */
+}
+
+.cover-card,
+.card,
+.timeline-item,
+.polaroid,
+.envelope-wrap,
+footer {
+  position: relative;  /* ensure these appear above hearts */
+  z-index: 1;
+}
+
+.heart {
+  position: absolute;
+  color: #ff4d6d;
+  font-size: 24px;
+  bottom: -30px; /* start just below the viewport */
+  animation: floatUp 6s linear infinite;
+}
+
+@keyframes floatUp {
+  0% { transform: translateY(0) scale(1); opacity: 1; }
+  100% { transform: translateY(-110vh) scale(1.5); opacity: 0; }
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+  pointer-events: none; /* ignore clicks initially */
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto; /* allow clicks once visible */
+}
+.gallery-grid video {
+  width: 100%;
+  max-width: 400px; /* optional max size */
+  height: auto;
+  border-radius: 12px;
+  display: block;
+  margin: 0 auto;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+}
+
+html { scroll-behavior: smooth; }
+
+
 </style>
 
 <script>
-  const correctPass = "Happy 19th Birthday"; // 🔑 change this to your passcode
+  
+
+  window.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('passInput').focus();
+});
+
+  const heartsBg = document.getElementById("hearts-bg");
+
+setInterval(() => {
+  const heart = document.createElement("div");
+  heart.classList.add("heart");
+  heart.textContent = "❤️";
+  heart.style.left = Math.random() * 100 + "vw";
+  heartsBg.appendChild(heart);
+
+  setTimeout(() => heart.remove(), 6000);
+}, 1000);
+
+
+
+  const correctPass = "19thBirthday"; // 🔑 keep your passcode here
 
   function checkPass() {
-    const input = document.getElementById("passInput").value;
-    if (input === correctPass) {
-      document.getElementById("lockscreen").style.display = "none";
-    } else {
-      document.getElementById("error").style.display = "block";
-    }
+  const input = document.getElementById("passInput").value;
+  const error = document.getElementById("error");
+
+  if (input === correctPass) {
+    const lock = document.getElementById("lockscreen");
+    lock.classList.add("fade-out");
+    setTimeout(() => { lock.style.display = "none"; }, 800);
+  } else {
+    error.style.display = "block";
+    setTimeout(() => { error.style.display = "none"; }, 3000);
   }
+}
+
+
+  // Enter key press triggers check
+  document.getElementById('passInput').addEventListener('keypress', function(e){
+    if(e.key === 'Enter') checkPass();
+  });
+
+  // Show/Hide passcode
+  const passInput = document.getElementById('passInput');
+  const showPass = document.getElementById('showPass');
+
+  showPass.addEventListener('change', () => {
+    passInput.type = showPass.checked ? 'text' : 'password';
+  });
 </script>
+
 
   <!-- NAV -->
   <nav>
     <a href="#reasons">Reasons</a>
     <a href="#story">Our Story</a>
     <a href="#gallery">Gallery</a>
-    <a href="#song">Our Song</a>
+    <a href="#videos">Cute Videos</a>
     <a href="#surprise">Surprise</a>
   </nav>
 
@@ -419,40 +659,60 @@
     </section>
 
     <!-- GALLERY -->
-    <section id="gallery">
+<section id="gallery">
   <div class="section-title">
     <div class="small">Chapter 3</div>
     <h2>Favorites in Pictures</h2>
   </div>
 
   <div class="gallery-grid">
-    <div class="polaroid reveal">
-      <img src="onam.jpg" alt="Memory 1">
+    <div class="polaroid reveal" data-img="onam.jpg">
+      <img src="onam.jpg" alt="Our Onam together">
       <p>Our Onam together</p>
     </div>
-    <div class="polaroid reveal">
-      <img src="vr.jpg" alt="Memory 2">
+
+    <div class="polaroid reveal" data-img="vr.jpg">
+      <img src="vr.jpg" alt="VR Mall Memory">
       <p>The pic we shot when went to VR mall</p>
     </div>
-    <div class="polaroid reveal">
-      <img src="first_story.jpg" alt="Memory 3">
-      <p>The only pic we took together on your birtday as you mom was there</p>
+
+    <div class="polaroid reveal" data-img="first_story.jpg">
+      <img src="first_story.jpg" alt="Birthday Memory">
+      <p>The only pic we took together on your birthday as your mom was there</p>
     </div>
   </div>
 </section>
 
 
-    <!-- SONG -->
-    <section id="song">
-      <div class="section-title">
-        <div class="small">Chapter 4</div>
-        <h2>Our Song</h2>
-      </div>
-      <div class="song reveal">
-        <p class="small">Press play & close your eyes</p>
-        <iframe width="560" height="315" src="https://www.youtube.com/embed/YOUR_VIDEO_ID?rel=0" title="Our Song" allow="autoplay; encrypted-media" allowfullscreen style="max-width:100%;border-radius:12px;"></iframe>
-      </div>
-    </section>
+<!-- CUTE VIDEOS -->
+<section id="videos">
+  <div class="section-title">
+    <div class="small">Chapter 4</div>
+    <h2>Our Cute Videos 🎥</h2>
+  </div>
+
+  <div class="gallery-grid">
+    <!-- First video -->
+    <div class="polaroid reveal">
+      <p style="font-weight:600; margin-bottom:8px;">Us in VR Mall</p>
+      <video controls>
+        <source src="video1.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+      </video>
+    </div>
+
+    <!-- Second video -->
+    <div class="polaroid reveal">
+      <p style="font-weight:600; margin-bottom:8px;">Us till Pongal</p>
+      <video controls>
+        <source src="video2.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+      </video>
+    </div>
+  </div>
+</section>
+
+
 
     <!-- SURPRISE -->
     <section id="surprise">
@@ -491,14 +751,25 @@
     
     // Reveal on scroll
     const revealEls = document.querySelectorAll('.reveal');
-    const io = new IntersectionObserver((entries) => {
-      entries.forEach(ent => { if(ent.isIntersecting) ent.target.classList.add('visible'); });
-    }, {threshold: 0.12});
-    revealEls.forEach(el => io.observe(el));
+const io = new IntersectionObserver((entries) => {
+  entries.forEach(entry => { 
+    if(entry.isIntersecting) entry.target.classList.add('visible'); 
+  });
+}, { threshold: 0.12 });
+
+// Observe each element, no stagger delay
+revealEls.forEach(el => io.observe(el));
+
 
     // Envelope open
-    const envelope = document.getElementById('envelope');
-    envelope.addEventListener('click', () => { envelope.classList.toggle('open'); });
+    document.addEventListener('DOMContentLoaded', () => {
+  const envelope = document.getElementById('envelope');
+  envelope.addEventListener('click', () => { 
+    envelope.classList.toggle('open'); 
+  });
+});
+
+
 
     // Gallery lightbox
     const modal = document.getElementById('modal');
@@ -511,14 +782,22 @@
     });
     modal.addEventListener('click', () => modal.classList.remove('open'));
   </script>
+<button id="muteBtn" aria-label="Mute or unmute background music">🔊</button>
 
-<audio id="bg-music" loop>
+<audio id="bg-music" preload="auto"loop>
   <source src="falling-in-love.mp3" type="audio/mpeg">
   Your browser does not support the audio element.
 </audio>
 
+<input type="range" id="volumeControl" min="0" max="1" step="0.01">
+
 <script>
-const bgMusic = document.getElementById('bg-music');
+  const bgMusic = document.getElementById('bg-music');
+  const volumeControl = document.getElementById('volumeControl');
+volumeControl.addEventListener('input', () => {
+  bgMusic.volume = volumeControl.value;
+});
+
 const giftModal = document.getElementById('giftModal');
 const openGiftBtn = document.getElementById('openGiftBtn');
 const playGiftBtn = document.getElementById('playGiftBtn');
@@ -549,6 +828,44 @@ playGiftBtn.addEventListener('click', () => {
   }, 100); // every 100ms, adjust volume
 });
 </script>
+<script>
+// Pause background music while video plays, resume after it ends
+document.querySelectorAll('video').forEach(video => {
+  video.addEventListener('play', () => {
+    if (!bgMusic.paused) { // only pause if playing
+      bgMusic.pause();
+      video._wasMusicPlaying = true; // remember state
+    }
+  });
+  
+  video.addEventListener('pause', () => {
+    // Optional: resume music if video paused before ending
+    if (video._wasMusicPlaying) bgMusic.play();
+  });
+
+  video.addEventListener('ended', () => {
+    if (video._wasMusicPlaying) {
+      bgMusic.play(); // resume music at its previous volume
+    }
+  });
+});
+
+</script>
+
+<script>
+  const muteBtn = document.getElementById('muteBtn');
+
+  muteBtn.addEventListener('click', () => {
+    if (bgMusic.muted) {
+      bgMusic.muted = false;
+      muteBtn.textContent = "🔊"; // unmuted icon
+    } else {
+      bgMusic.muted = true;
+      muteBtn.textContent = "🔇"; // muted icon
+    }
+  });
+</script>
+
 
 </body>
 </html>
