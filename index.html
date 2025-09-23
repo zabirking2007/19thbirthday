@@ -679,6 +679,9 @@ html { scroll-behavior: smooth; }
   font-size: 16px;
   transition: background-color 0.2s ease;
 }
+@media (max-width:520px){
+  .timeline-item { margin-bottom: 20px; }
+}
 
 .gift-content button:hover {
   background-color: #ff1493;
@@ -720,16 +723,26 @@ function checkPass() {
   const error = document.getElementById("error");
 
   if(input === correctPass){
-    document.getElementById("lockscreen").style.display = "none"; // hide overlay
-
-    // Enable only Play Music button
-    const playBtn = document.getElementById("playGiftBtn");
-    playBtn.disabled = false;  // unlock the button
-  } else {
+  const lockscreen = document.getElementById("lockscreen");
+  lockscreen.classList.add("fade-out");
+  setTimeout(() => { lockscreen.style.display = "none"; }, 800);
+  const playBtn = document.getElementById("playGiftBtn");
+  playBtn.disabled = false;
+}
+else {
     error.style.display = "block";
+document.getElementById("passInput").focus();
+
     setTimeout(()=> { error.style.display = "none"; }, 3000);
   }
 }
+
+document.getElementById("showPass").addEventListener("change", (e) => {
+  const input = document.getElementById("passInput");
+  input.type = e.target.checked ? "text" : "password";
+});
+
+
 
 // Enter key triggers unlock
 document.getElementById("passInput").addEventListener("keypress", function(e){
