@@ -7,8 +7,48 @@
 
   <!-- Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+<script>
+window.addEventListener("load", function() {
+    // Reset scroll to top every time the page loads
+    window.scrollTo(0, 0);
+
+    // Lock scrolling initially
+    document.body.style.overflow = "hidden";
+});
+</script>
 
   <style>
+    body {
+  overflow: hidden; /* Disable scrolling initially */
+  scroll-behavior: smooth; /* Smooth scrolling once enabled */
+}
+.gift-intro {
+    font-size: 1.2rem;       /* bigger text */
+    font-weight: 500;        /* semi-bold */
+    color: #ff4081;          /* nice pink/red color */
+    text-align: center;      /* centered text */
+    margin: 10px 0;          /* spacing above/below */
+    line-height: 1.6;        /* spacing between lines */
+    transition: transform 0.3s ease;  /* for small hover effect */
+}
+
+.gift-intro:hover {
+    transform: scale(1.05);  /* subtle hover pop */
+}
+
+
+#gifts {
+  opacity: 0;
+  transform: translateY(50px);
+  transition: all 1s ease;
+}
+
+#gifts.reveal-animation {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+
     :root{
       --accent:#e91e63;
       --accent-dark:#b00047;
@@ -494,6 +534,114 @@ footer {
 html { scroll-behavior: smooth; }
 
 
+
+.gifts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+  margin-top: 30px;
+}
+
+.gift-card {
+  background: #fff;
+  border-radius: 15px;
+  padding: 20px;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  transition: transform 0.2s ease;
+}
+
+.gift-card:hover {
+  transform: translateY(-5px);
+}
+
+.gift-card input {
+  padding: 8px;
+  margin-top: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  width: 70%;
+}
+
+.gift-card button {
+  margin-top: 10px;
+  padding: 8px 16px;
+  background: #ff4d6d;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.gift-card button:hover {
+  background: #e63956;
+}
+
+.gift-surprise {
+  display: none;
+  margin-top: 15px;
+  animation: fadeIn 0.6s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
+}
+/* Add this at the very end of your existing CSS file */
+/* Gift section styling */
+.gift-content {
+  display: none; /* Hide all gifts initially */
+  background: #fff0f5; /* soft pink background for gifts */
+  border: 2px solid #ff69b4; /* pink border */
+  border-radius: 12px;
+  padding: 20px;
+  margin: 15px 0;
+  text-align: center;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+/* Show active gift */
+.gift-content.active {
+  display: block;
+}
+
+/* Input styling */
+.gift-content input {
+  padding: 10px;
+  margin-top: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  width: 60%;
+  font-size: 16px;
+}
+
+/* Button styling */
+.gift-content button {
+  padding: 10px 20px;
+  margin-top: 10px;
+  background-color: #ff69b4;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.2s ease;
+}
+
+.gift-content button:hover {
+  background-color: #ff1493;
+
+  /* Initially prevent scrolling */
+body.lock-scroll {
+  overflow: hidden;
+}
+
+}
+
+
+
 </style>
 
 <script>
@@ -547,17 +695,11 @@ setInterval(() => {
   showPass.addEventListener('change', () => {
     passInput.type = showPass.checked ? 'text' : 'password';
   });
+
+
+
+
 </script>
-
-
-  <!-- NAV -->
-  <nav>
-    <a href="#reasons">Reasons</a>
-    <a href="#story">Our Story</a>
-    <a href="#gallery">Gallery</a>
-    <a href="#videos">Cute Videos</a>
-    <a href="#surprise">Surprise</a>
-  </nav>
 
   <main class="wrap">
     <!-- COVER -->
@@ -581,6 +723,232 @@ setInterval(() => {
       </div>
     </section>
 
+    <section id="gift-unlocks">
+  <section id="gift-unlocks">
+  <div class="section-title">
+    <h2>🎁 Unlock Your 19 Birthday Gifts</h2>
+    <p class="gift-intro">
+  Each gift I give you has a secret passcode inside. Enter it here to reveal a surprise ❤️
+</p>
+<p class="gift-intro">
+  Piece of love for you 💕
+</p>
+
+
+  <!-- Gift 1 -->
+  <div class="gift-content" data-clue="You got chocolate! 🍫">
+    <p>Gift 1: Chocolate</p>
+    <input type="text" id="gift-input-0" placeholder="Enter password">
+    <button onclick="checkPassword(0)">Unlock</button>
+    <div class="gift-surprise">
+      <h3>🎉 Surprise! 🎉</h3>
+      <p>Chocolate is waiting for you! 🍫💖</p>
+      <p>Hope it sweetens your day! 🌟</p>
+    </div>
+  </div>
+
+  <!-- Gift 2 -->
+  <div class="gift-content" data-clue="Hug the teddy! 🧸">
+    <p>Gift 2: Teddy Bear</p>
+    <input type="text" id="gift-input-1" placeholder="Enter password">
+    <button onclick="checkPassword(1)">Unlock</button>
+    <div class="gift-surprise">
+      <h3>🐻 Surprise! 🐻</h3>
+      <p>This cute teddy bear is for cuddles and smiles! 💕</p>
+    </div>
+  </div>
+
+  <!-- Gift 3 -->
+  <div class="gift-content" data-clue="Sparkle with this bracelet ✨">
+    <p>Gift 3: Bracelet</p>
+    <input type="text" id="gift-input-2" placeholder="Enter password">
+    <button onclick="checkPassword(2)">Unlock</button>
+    <div class="gift-surprise">
+      <h3>✨ Surprise! ✨</h3>
+      <p>This bracelet is a token of my love and wishes for you! 💖</p>
+    </div>
+  </div>
+
+  <!-- Gift 4 -->
+  <div class="gift-content" data-clue="Write your thoughts 📓">
+    <p>Gift 4: Notebook</p>
+    <input type="text" id="gift-input-3" placeholder="Enter password">
+    <button onclick="checkPassword(3)">Unlock</button>
+    <div class="gift-surprise">
+      <h3>📓 Surprise! 📓</h3>
+      <p>Use this notebook to jot down all your happy memories! 🌸</p>
+    </div>
+  </div>
+
+  <!-- Gift 5 -->
+  <div class="gift-content" data-clue="A pen for your thoughts ✍️">
+    <p>Gift 5: Pen</p>
+    <input type="text" id="gift-input-4" placeholder="Enter password">
+    <button onclick="checkPassword(4)">Unlock</button>
+    <div class="gift-surprise">
+      <h3>✍️ Surprise! ✍️</h3>
+      <p>This pen is to write your dreams and my love notes! 💕</p>
+    </div>
+  </div>
+
+  <!-- Gift 6 -->
+  <div class="gift-content" data-clue="Keep memories with you 🔑">
+    <p>Gift 6: Keychain</p>
+    <input type="text" id="gift-input-5" placeholder="Enter password">
+    <button onclick="checkPassword(5)">Unlock</button>
+    <div class="gift-surprise">
+      <h3>🔑 Surprise! 🔑</h3>
+      <p>This keychain will hold the keys to happy moments! 💖</p>
+    </div>
+  </div>
+
+  <!-- Gift 7 -->
+  <div class="gift-content" data-clue="A little sparkle for your neck 💎">
+    <p>Gift 7: Necklace</p>
+    <input type="text" id="gift-input-6" placeholder="Enter password">
+    <button onclick="checkPassword(6)">Unlock</button>
+    <div class="gift-surprise">
+      <h3>💎 Surprise! 💎</h3>
+      <p>This necklace is a tiny sparkle, just like you! ✨</p>
+    </div>
+  </div>
+
+  <!-- Gift 8 -->
+  <div class="gift-content" data-clue="Mark your favorite memories 📚">
+    <p>Gift 8: Bookmark</p>
+    <input type="text" id="gift-input-7" placeholder="Enter password">
+    <button onclick="checkPassword(7)">Unlock</button>
+    <div class="gift-surprise">
+      <h3>📚 Surprise! 📚</h3>
+      <p>Use this bookmark for the stories we share together! 💕</p>
+    </div>
+  </div>
+
+  <!-- Gift 9 -->
+  <div class="gift-content" data-clue="Shine with these earrings ✨">
+    <p>Gift 9: Earrings</p>
+    <input type="text" id="gift-input-8" placeholder="Enter password">
+    <button onclick="checkPassword(8)">Unlock</button>
+    <div class="gift-surprise">
+      <h3>✨ Surprise! ✨</h3>
+      <p>These earrings will remind you of my love! 💖</p>
+    </div>
+  </div>
+
+  <!-- Gift 10 -->
+  <div class="gift-content" data-clue="Stay warm with love 🧣">
+    <p>Gift 10: Scarf</p>
+    <input type="text" id="gift-input-9" placeholder="Enter password">
+    <button onclick="checkPassword(9)">Unlock</button>
+    <div class="gift-surprise">
+      <h3>🧣 Surprise! 🧣</h3>
+      <p>This scarf wraps you in warmth, just like my hugs! 💕</p>
+    </div>
+  </div>
+
+  <!-- Gift 11 -->
+  <div class="gift-content" data-clue="For your pretty hair 🎀">
+    <p>Gift 11: Hairband</p>
+    <input type="text" id="gift-input-10" placeholder="Enter password">
+    <button onclick="checkPassword(10)">Unlock</button>
+    <div class="gift-surprise">
+      <h3>🎀 Surprise! 🎀</h3>
+      <p>Use this hairband to style your lovely hair! 💖</p>
+    </div>
+  </div>
+
+  <!-- Gift 12 -->
+  <div class="gift-content" data-clue="Fun stickers inside! 🌟">
+    <p>Gift 12: Stickers</p>
+    <input type="text" id="gift-input-11" placeholder="Enter password">
+    <button onclick="checkPassword(11)">Unlock</button>
+    <div class="gift-surprise">
+      <h3>🌟 Surprise! 🌟</h3>
+      <p>Decorate your world with these cute stickers! 💕</p>
+    </div>
+  </div>
+
+  <!-- Gift 13 -->
+  <div class="gift-content" data-clue="Capture memories 🖼️">
+    <p>Gift 13: Photo Frame</p>
+    <input type="text" id="gift-input-12" placeholder="Enter password">
+    <button onclick="checkPassword(12)">Unlock</button>
+    <div class="gift-surprise">
+      <h3>🖼️ Surprise! 🖼️</h3>
+      <p>Keep our beautiful memories in this frame! 💖</p>
+    </div>
+  </div>
+
+  <!-- Gift 14 -->
+  <div class="gift-content" data-clue="A candle for your glow 🕯️">
+    <p>Gift 14: Candle</p>
+    <input type="text" id="gift-input-13" placeholder="Enter password">
+    <button onclick="checkPassword(13)">Unlock</button>
+    <div class="gift-surprise">
+      <h3>🕯️ Surprise! 🕯️</h3>
+      <p>Light this candle and let your day shine! 🌟💖</p>
+    </div>
+  </div>
+
+  <!-- Gift 15 -->
+  <div class="gift-content" data-clue="Sip some love ☕">
+    <p>Gift 15: Mug</p>
+    <input type="text" id="gift-input-14" placeholder="Enter password">
+    <button onclick="checkPassword(14)">Unlock</button>
+    <div class="gift-surprise">
+      <h3>☕ Surprise! ☕</h3>
+      <p>Enjoy your favorite drink in this special mug! 💕</p>
+    </div>
+  </div>
+
+  <!-- Gift 16 -->
+  <div class="gift-content" data-clue="Another bracelet for you ✨">
+    <p>Gift 16: Bracelet</p>
+    <input type="text" id="gift-input-15" placeholder="Enter password">
+    <button onclick="checkPassword(15)">Unlock</button>
+    <div class="gift-surprise">
+      <h3>✨ Surprise! ✨</h3>
+      <p>This bracelet is a little sparkle from me to you! 💖</p>
+    </div>
+  </div>
+
+  <!-- Gift 17 -->
+  <div class="gift-content" data-clue="A ring for love 💍">
+    <p>Gift 17: Ring</p>
+    <input type="text" id="gift-input-16" placeholder="Enter password">
+    <button onclick="checkPassword(16)">Unlock</button>
+    <div class="gift-surprise">
+      <h3>💍 Surprise! 💍</h3>
+      <p>This ring represents my endless love for you! 💕</p>
+    </div>
+  </div>
+
+  <!-- Gift 18 -->
+  <div class="gift-content" data-clue="Last bracelet for fun ✨">
+    <p>Gift 18: Bracelet</p>
+    <input type="text" id="gift-input-17" placeholder="Enter password">
+    <button onclick="checkPassword(17)">Unlock</button>
+    <div class="gift-surprise">
+      <h3>✨ Surprise! ✨</h3>
+      <p>Another little charm to remind you of me! 💖</p>
+    </div>
+  </div>
+
+  <!-- Gift 19 -->
+  <div class="gift-content" data-clue="This is the last gift! 🎁">
+    <p>Gift 19: Special Surprise</p>
+    <input type="text" id="gift-input-18" placeholder="Enter password">
+    <button onclick="checkPassword(18)">Unlock</button>
+    <div class="gift-surprise">
+      <h3>🎉 Surprise! 🎉</h3>
+      <p>This is your special birthday surprise! 🎂💖 I hope you love it! 🌟</p>
+    </div>
+  </div>
+</section>
+
+
+<br>
+<br>
     <!-- REASONS -->
     <section id="reasons">
       <div class="section-title">
@@ -611,6 +979,8 @@ setInterval(() => {
 
       </div>
     </section>
+<br>
+<br>
 
     <!-- STORY -->
     <section id="story">
@@ -684,6 +1054,8 @@ setInterval(() => {
   </div>
 </section>
 
+<br>
+<br>
 
 <!-- CUTE VIDEOS -->
 <section id="videos">
@@ -713,7 +1085,8 @@ setInterval(() => {
   </div>
 </section>
 
-
+<br>
+<br>
 
     <!-- SURPRISE -->
     <section id="surprise">
@@ -865,8 +1238,102 @@ document.querySelectorAll('video').forEach(video => {
       muteBtn.textContent = "🔇"; // muted icon
     }
   });
+
+  const giftPasswords = [
+  "gift1","gift2","gift3","gift4","gift5",
+  "gift6","gift7","gift8","gift9","gift10",
+  "gift11","gift12","gift13","gift14","gift15",
+  "gift16","gift17","gift18","gift19"
+];
+
+// Select all gift elements
+const gifts = document.querySelectorAll('.gift-content');
+
+// Show only the first gift initially
+gifts.forEach((gift, i) => {
+  if(i === 0) gift.style.display = "block";
+  else gift.style.display = "none";
+});
+
+function checkPassword(index) {
+  const input = document.getElementById(`gift-input-${index}`);
+  const value = input.value.trim().toLowerCase();
+
+  if(value === giftPasswords[index]) {
+    const gift = gifts[index];
+    const surprise = gift.querySelector('.gift-surprise');
+
+    // Show surprise content
+    surprise.style.display = "block";
+
+    // Hide input and button
+    input.style.display = "none";
+    gift.querySelector('button').style.display = "none";
+
+    // Show next gift
+    if(index + 1 < gifts.length) {
+      gifts[index + 1].style.display = "block";
+    }
+  } else {
+    alert("Wrong password! Try again ❤️");
+  }
+}
+const playBtn = document.getElementById("play-music-btn");
+const audio = document.getElementById("bg-music");
+const giftsSection = document.getElementById("gift-unlocks");
+
+// Lock scroll on page load
+document.body.classList.add("lock-scroll");
+
+playBtn.addEventListener("click", () => {
+  // Play music
+  audio.play();
+
+  // Unlock scroll
+  document.body.classList.remove("lock-scroll");
+
+  // Smooth scroll to gifts section
+  giftsSection.scrollIntoView({ behavior: "smooth" });
+
+  // Hide the button after click
+  playBtn.style.display = "none";
+});
+
+
 </script>
 
+<script>
+document.getElementById("playGiftBtn").addEventListener("click", function() {
+    // Play music
+    document.getElementById("bg-music").play();
+
+    // Enable scrolling if it was disabled
+    document.body.style.overflow = "auto";
+
+    // Smooth scroll to gifts section
+    document.getElementById("gifts").scrollIntoView({ behavior: "smooth" });
+
+    // Optional: add animation class to gifts section
+    document.getElementById("gifts").classList.add("reveal-animation");
+});
+</script>
+<script>
+document.getElementById("playGiftBtn").addEventListener("click", function() {
+    // Play the background music
+    document.getElementById("bg-music").play();
+
+    // Enable scrolling if it was disabled
+    document.body.style.overflow = "auto";
+
+    // Smooth scroll to the gift-unlocks section
+    setTimeout(function() {
+        const giftsSection = document.getElementById("gift-unlocks");
+        if (giftsSection) {
+            giftsSection.scrollIntoView({ behavior: "smooth" });
+        }
+    }, 100); // tiny delay
+});
+</script>
 
 </body>
 </html>
