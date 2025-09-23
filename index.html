@@ -18,10 +18,60 @@ window.addEventListener("load", function() {
 </script>
 
   <style>
+    #passcode-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.95); /* semi-transparent */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999; /* always on top */
+    overflow: hidden; /* prevent scrolling behind overlay */
+    padding: 20px; /* mobile safe padding */
+    box-sizing: border-box;
+}
+#passcode-input {
+    font-size: 1.2rem;
+    padding: 12px 16px;
+    width: 80%;
+    max-width: 300px;
+    margin-bottom: 20px;
+    border: 2px solid #ff4081;
+    border-radius: 10px;
+}
+
+#playGiftBtn {
+    font-size: 1.2rem;
+    padding: 12px 20px;
+    border-radius: 10px;
+    background-color: #ff4081;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
     body {
   overflow: hidden; /* Disable scrolling initially */
   scroll-behavior: smooth; /* Smooth scrolling once enabled */
 }
+
+#lockscreen {
+  position: fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background: rgba(0,0,0,0.95);
+  z-index: 9999;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+
 .gift-intro {
     font-size: 1.2rem;       /* bigger text */
     font-weight: 500;        /* semi-bold */
@@ -663,41 +713,28 @@ setInterval(() => {
   setTimeout(() => heart.remove(), 6000);
 }, 1000);
 
+const correctPass = "19thBirthday";
 
-
-  const correctPass = "19thBirthday"; // 🔑 keep your passcode here
-
-  function checkPass() {
+function checkPass() {
   const input = document.getElementById("passInput").value.trim();
   const error = document.getElementById("error");
 
-  if (input === correctPass) {
-    const lock = document.getElementById("lockscreen");
-    lock.classList.add("fade-out");
-    setTimeout(() => { lock.style.display = "none"; }, 800);
+  if(input === correctPass){
+    document.getElementById("lockscreen").style.display = "none"; // hide overlay
+
+    // Enable only Play Music button
+    const playBtn = document.getElementById("playGiftBtn");
+    playBtn.disabled = false;  // unlock the button
   } else {
     error.style.display = "block";
-    setTimeout(() => { error.style.display = "none"; }, 3000);
+    setTimeout(()=> { error.style.display = "none"; }, 3000);
   }
 }
 
-
-
-  // Enter key press triggers check
-  document.getElementById('passInput').addEventListener('keypress', function(e){
-    if(e.key === 'Enter') checkPass();
-  });
-
-  // Show/Hide passcode
-  const passInput = document.getElementById('passInput');
-  const showPass = document.getElementById('showPass');
-
-  showPass.addEventListener('change', () => {
-    passInput.type = showPass.checked ? 'text' : 'password';
-  });
-
-
-
+// Enter key triggers unlock
+document.getElementById("passInput").addEventListener("keypress", function(e){
+  if(e.key === "Enter") checkPass();
+});
 
 </script>
 
@@ -1158,7 +1195,7 @@ revealEls.forEach(el => io.observe(el));
   </script>
 <button id="muteBtn" aria-label="Mute or unmute background music">🔊</button>
 
-<audio id="bg-music" preload="auto"loop>
+<audio id="bg-music" preload="auto">
   <source src="falling-in-love.mp3" type="audio/mpeg">
   Your browser does not support the audio element.
 </audio>
@@ -1304,35 +1341,23 @@ playBtn.addEventListener("click", () => {
 
 <script>
 document.getElementById("playGiftBtn").addEventListener("click", function() {
-    // Play music
-    document.getElementById("bg-music").play();
+  const music = document.getElementById("bg-music");
 
-    // Enable scrolling if it was disabled
-    document.body.style.overflow = "auto";
+  // Play only if not already playing
+  if (music.paused) {
+    music.play();
+    music.loop = true; // optional, if you want continuous music
+  }
 
-    // Smooth scroll to gifts section
-    document.getElementById("gifts").scrollIntoView({ behavior: "smooth" });
+  // Enable scrolling
+  document.body.style.overflow = "auto";
+  document.documentElement.style.overflow = "auto";
 
-    // Optional: add animation class to gifts section
-    document.getElementById("gifts").classList.add("reveal-animation");
+  // Smooth scroll to gifts section
+  document.getElementById("gift-unlocks").scrollIntoView({ behavior: "smooth" });
 });
-</script>
-<script>
-document.getElementById("playGiftBtn").addEventListener("click", function() {
-    // Play the background music
-    document.getElementById("bg-music").play();
 
-    // Enable scrolling if it was disabled
-    document.body.style.overflow = "auto";
 
-    // Smooth scroll to the gift-unlocks section
-    setTimeout(function() {
-        const giftsSection = document.getElementById("gift-unlocks");
-        if (giftsSection) {
-            giftsSection.scrollIntoView({ behavior: "smooth" });
-        }
-    }, 100); // tiny delay
-});
 </script>
 
 </body>
