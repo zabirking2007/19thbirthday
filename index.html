@@ -372,7 +372,7 @@ window.addEventListener("load", function() {
 <!-- PASSCODE SCREEN -->
 <div id="lockscreen">
   <div class="lock-card">
-    <h2>🔐 Enter Your Secret Love Code</h2>
+    <h2>🔐 Your Secret Love Code</h2>
     <input type="password" id="passInput" placeholder="💖 Type your secret..." autocomplete="off">
     <label class="show-pass">
       <input type="checkbox" id="showPass">
@@ -453,16 +453,21 @@ window.addEventListener("load", function() {
     accent-color: #e91e63;
   }
  #lockscreen {
-    position: fixed;
-    inset: 0;
-    background: linear-gradient(135deg, #ffdde1, #ee9ca7);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 9999;
-    overflow: hidden;
-    transition: opacity 0.8s ease, transform 0.8s ease;
-  }
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  min-height: 100dvh; /* full mobile viewport */
+  background: rgba(255, 255, 255, 0.95);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  overflow: hidden; /* block scroll inside */
+  touch-action: none; /* disable touch gestures */
+}
+
 
  #lockscreen.fade-out {
     opacity: 0;
@@ -1293,6 +1298,24 @@ document.getElementById("playGiftBtn").addEventListener("click", function() {
   // Smooth scroll to gifts section
   document.getElementById("gift-unlocks").scrollIntoView({ behavior: "smooth" });
 });
+function checkPass() {
+  const input = document.getElementById("passInput").value.trim();
+  const error = document.getElementById("error");
+  const lockscreen = document.getElementById("lockscreen");
+
+  if (input === correctPass) {
+    document.body.style.overflow = "hidden";
+    lockscreen.classList.add("fade-out");
+    setTimeout(() => {
+      lockscreen.style.display = "none";
+      document.body.style.overflow = "auto";
+    }, 800);
+  } else {
+    error.style.display = "block";
+    document.getElementById("passInput").focus();
+    setTimeout(() => { error.style.display = "none"; }, 3000);
+  }
+}
 
 document.addEventListener('DOMContentLoaded', () => {
   const lockscreen = document.getElementById('lockscreen');
