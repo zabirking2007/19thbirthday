@@ -372,7 +372,7 @@ window.addEventListener("load", function() {
 <!-- PASSCODE SCREEN -->
 <div id="lockscreen">
   <div class="lock-card">
-    <h2>🔐 Your Secret Love Code</h2>
+    <h2>🔐 Enter Your Secret Love Code </h2>
     <input type="password" id="passInput" placeholder="💖 Type your secret..." autocomplete="off">
     <label class="show-pass">
       <input type="checkbox" id="showPass">
@@ -437,6 +437,11 @@ window.addEventListener("load", function() {
   box-shadow: 0 4px 12px rgba(233,30,99,0.4);
   transform: scale(1.02);
 }
+#lockscreen.fade-out {
+  opacity: 0;
+  transition: opacity 0.8s ease; /* fade over 0.2 seconds */
+}
+
  .show-pass {
     display: flex;
     align-items: center;
@@ -458,7 +463,6 @@ window.addEventListener("load", function() {
   left: 0;
   width: 100%;
   min-height: 100dvh; /* full mobile viewport */
-  background: rgba(255, 255, 255, 0.95);
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -466,6 +470,20 @@ window.addEventListener("load", function() {
   z-index: 9999;
   overflow: hidden; /* block scroll inside */
   touch-action: none; /* disable touch gestures */
+  
+  /* Gradient background with animation */
+  background: linear-gradient(270deg, #ff9a9e, #fad0c4, #a18cd1, #fbc2eb);
+  background-size: 800% 800%;
+  animation: gradientBG 15s ease infinite;
+}
+
+/* Add keyframes for the gradient animation */
+@keyframes gradientBG {
+  0% {background-position: 0% 50%;}
+  50% {background-position: 100% 50%;}
+  100% {background-position: 0% 50%;}
+}
+
 }
 
 
@@ -676,6 +694,74 @@ body.lock-scroll {
 
 }
 
+#quiz-section {
+  padding: 50px 20px;
+  text-align: center;
+  background: linear-gradient(135deg, #ffe6f0, #fff0e6);
+}
+
+.quiz-question {
+  margin: 25px auto;
+  max-width: 450px;
+  background: #fff;
+  padding: 25px;
+  border-radius: 20px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+  transform: scale(0);
+  animation: fadeInScale 0.5s forwards;
+  position: relative;
+}
+
+.options {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 15px;
+  gap: 10px;
+}
+
+.option {
+  padding: 10px 15px;
+  border-radius: 15px;
+  border: none;
+  background: #ff6f91;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  transition: transform 0.2s, background 0.2s;
+}
+
+.option:hover {
+  transform: scale(1.1);
+  background: #ff3c78;
+}
+
+.quiz-feedback {
+  margin-top: 10px;
+  font-weight: bold;
+  font-size: 16px;
+  min-height: 22px;
+  transition: all 0.3s ease;
+}
+
+@keyframes fadeInScale {
+  from { transform: scale(0); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+@keyframes shake {
+  0% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  50% { transform: translateX(5px); }
+  75% { transform: translateX(-5px); }
+  100% { transform: translateX(0); }
+}
+
+@keyframes correctPop {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
 
 
 </style>
@@ -975,30 +1061,45 @@ body.lock-scroll {
             <div class="text">I still remember your smile the first time I saw you — that's where my favorite chapter began.</div>
           </div>
         </div>
+        <br>
+        <br>
+
         <div class="timeline-item timeline-right reveal">
                     <div>
             <div class="date">The First touch - Our Anniversary - 14:09:2024</div>
             <div class="text">The day in the canteen when I tried to take ur ID card but I touched ur lap and that shy on your face is priceless</div>
           </div>
         </div>
+        <br>
+        <br>
+
         <div class="timeline-item timeline-left reveal">
                     <div>
             <div class="date">Our First Onam celeberation together - 20:09:2024</div>
             <div class="text">The first time I saw you in saree.</div>
           </div>
         </div>
+        <br>
+        <br>
+
         <div class="timeline-item timeline-right reveal">
                     <div>
             <div class="date">Your Birthday with me- 29:10:2024</div>
             <div class="text">You were so gorgeous in that blue modern saree.</div>
           </div>
         </div>
+        <br>
+        <br>
+
         <div class="timeline-item timeline-left reveal">
           <div>
             <div class="date">Our First Outing and Movie together- 10:11:2024 </div>
             <div class="text">Amaran in VR mall right...We laughed so much that day — it felt like the world paused for us.</div>
           </div>
         </div>
+        <br>
+        <br>
+        
         <div class="timeline-item timeline-right reveal">
                     <div>
             <div class="date">Our Thala Pongal - 11:01:2025</div>
@@ -1066,7 +1167,75 @@ body.lock-scroll {
 
 <br>
 <br>
+<br>
+<br>
+<section id="quiz-section">
+  <div class="section-title">
+    <div class="small">Chapter 5</div>
+    <h2>Quiz Time ❤️</h2>
+  </div>
 
+  <div id="quiz-container">
+    <div class="quiz-question" data-index="0">
+      <p>1️⃣ When did you first see me?</p>
+      <div class="options">
+        <button class="option">Sept 09</button>
+        <button class="option">Sept 05</button>
+        <button class="option">Sept 13</button>
+        <button class="option">Sept 14</button>
+      </div>
+      <p class="quiz-feedback"></p>
+    </div>
+
+    <div class="quiz-question" data-index="1">
+      <p>2️⃣ Where did I first see you?</p>
+      <div class="options">
+        <button class="option">Sept 14</button>
+        <button class="option">Sept 09</button>
+        <button class="option">Sept 13</button>
+        <button class="option">Sept 05</button>
+      </div>
+      <p class="quiz-feedback"></p>
+    </div>
+
+    <div class="quiz-question" data-index="2">
+      <p>2️⃣ When is our Anniversay?</p>
+      <div class="options">
+        <button class="option">Sept 14</button>
+        <button class="option">Sept 09</button>
+        <button class="option">Sept 13</button>
+        <button class="option">Sept 05</button>
+      </div>
+      <p class="quiz-feedback"></p>
+    </div>
+
+    <div class="quiz-question" data-index="3">
+      <p>2️⃣ What's the first gift I gave you?</p>
+      <div class="options">
+        <button class="option">Dairy Milk </button>
+        <button class="option">Chocolates</button>
+        <button class="option">Red Bear with Chocolates</button>
+        <button class="option">Clip</button>
+      </div>
+      <p class="quiz-feedback"></p>
+    </div>
+
+    <div class="quiz-question" data-index="4">
+      <p>2️⃣ What shirt did I wear when I saw you first ?</p>
+      <div class="options">
+        <button class="option">Pink linen</button>
+        <button class="option">Beige striped</button>
+        <button class="option">Blue Linen</button>
+        <button class="option">White shirt blue striped</button>
+      </div>
+      <p class="quiz-feedback"></p>
+    </div>
+    <!-- Add more questions as needed -->
+  </div>
+</section>
+
+<br>
+<br>
     <!-- SURPRISE -->
     <section id="surprise">
       <div class="section-title">
@@ -1100,8 +1269,56 @@ body.lock-scroll {
     <img src="" alt="Large view">
   </div>
 
+
+<script>
+ const quizData = [
+  { answer: "Sept 05" }, 
+  { answer: "Sept 13" },
+  { answer: "Sept 14" },
+  { answer: "Clip" },
+  { answer: "Beige striped" } 
+  // add more as needed
+];
+
+document.querySelectorAll('.quiz-question').forEach((question, index) => {
+  question.querySelectorAll('.option').forEach(optionBtn => {
+    optionBtn.addEventListener('click', () => {
+      const feedback = question.querySelector('.quiz-feedback');
+      const selected = optionBtn.textContent;
+
+      if(selected === quizData[index].answer) {
+        // Correct answer animation
+        optionBtn.style.background = "#4CAF50"; // green
+        optionBtn.style.color = "#fff";
+        optionBtn.style.transform = "scale(1.2)";
+        setTimeout(() => { optionBtn.style.transform = "scale(1)"; }, 300);
+        feedback.textContent = "🎉 Correct!";
+        feedback.style.color = "green";
+
+        // disable all buttons for this question
+        question.querySelectorAll('.option').forEach(btn => btn.disabled = true);
+
+      } else {
+        // Wrong answer animation
+        optionBtn.style.background = "#FF3C78"; // red flash
+        optionBtn.style.transform = "translateX(0)";
+        optionBtn.classList.add('shake');
+        feedback.textContent = "❌ Try again!";
+        feedback.style.color = "red";
+
+        optionBtn.addEventListener('animationend', () => {
+          optionBtn.classList.remove('shake');
+          optionBtn.style.background = "#ff6f91";
+        }, { once: true });
+      }
+    });
+  });
+});
+
+</script>
   <script>
     
+
     // Reveal on scroll
     const revealEls = document.querySelectorAll('.reveal');
 const io = new IntersectionObserver((entries) => {
@@ -1135,9 +1352,11 @@ revealEls.forEach(el => io.observe(el));
     });
     modal.addEventListener('click', () => modal.classList.remove('open'));
   </script>
+
+  
 <button id="muteBtn" aria-label="Mute or unmute background music">🔊</button>
 
-<audio id="bg-music" preload="auto">
+<audio id="bg-music" preload="auto" loop>
   <source src="falling-in-love.mp3" type="audio/mpeg">
   Your browser does not support the audio element.
 </audio>
@@ -1235,6 +1454,7 @@ gifts.forEach((gift, i) => {
 });
 
 function checkPassword(index) {
+
   const input = document.getElementById(`gift-input-${index}`);
   const value = input.value.trim().toLowerCase();
 
@@ -1257,6 +1477,16 @@ function checkPassword(index) {
     alert("Wrong password! Try again ❤️");
   }
 }
+// Add Enter key functionality for all gifts
+gifts.forEach((gift, i) => {
+  const input = gift.querySelector('input');
+  input.addEventListener('keypress', (e) => {
+    if (e.key === "Enter") {
+      checkPassword(i); // call the corresponding gift function
+    }
+  });
+});
+
 const playBtn = document.getElementById("play-music-btn");
 const audio = document.getElementById("bg-music");
 const giftsSection = document.getElementById("gift-unlocks");
