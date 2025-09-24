@@ -65,38 +65,7 @@ window.addEventListener("load", function() {
   overflow: hidden; /* Disable scrolling initially */
   scroll-behavior: smooth; /* Smooth scrolling once enabled */
 }
-#lock-screen input {
-  width: 80%;
-  max-width: 300px;
-  padding: 10px;
-  font-size: 16px;
-}
 
-#lockscreen {
-  position: fixed;
-  top:0;
-  left:0;
-  width:100%;
-  height:100%;
-  background: rgba(0,0,0,0.95);
-  z-index: 9999;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-}
-
-#lock-screen {
-  position: fixed; /* stay in place */
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh; /* full viewport height */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: rgba(0,0,0,0.9); /* dark overlay */
-  z-index: 9999; /* above everything */
-}
 
 
 .gift-intro {
@@ -433,41 +402,35 @@ window.addEventListener("load", function() {
 
 
 <style>
-  #lockscreen {
-    position: fixed;
-    inset: 0;
-    background: linear-gradient(135deg, #ffdde1, #ee9ca7);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 9999;
-  }
   .lock-card {
-    background: white;
-    padding: 30px;
-    border-radius: 16px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-    text-align: center;
-    font-family: Poppins, sans-serif;
-  }
-  .lock-card input {
-    padding: 10px;
-    width: 200px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    margin-bottom: 12px;
-    outline: none;
-  }
+  background: white;
+  padding: 30px;
+  border-radius: 16px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+  text-align: center;
+  font-family: Poppins, sans-serif;
+  width: 90%;
+  max-width: 350px;
+}
+
+.lock-card input {
+  padding: 12px;
+  width: 100%;
+  border: 2px solid #e91e63;
+  border-radius: 8px;
+  margin-bottom: 12px;
+  font-size: 16px;
+  text-align: center;
+}
   .lock-card button {
-    padding: 10px 20px;
-    border: none;
-    border-radius: 8px;
-    background: linear-gradient(90deg,#e91e63,#b00047);
-    color: white;
-    font-weight: 600;
-    cursor: pointer;
-    
-  }
+  padding: 12px 20px;
+  border: none;
+  border-radius: 8px;
+  background: linear-gradient(90deg,#e91e63,#b00047);
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+}
   #passInput {
   padding: 12px;
   width: 200px;
@@ -487,20 +450,29 @@ window.addEventListener("load", function() {
 .show-pass {
   display: flex;
   align-items: center;
-  justify-content: center; /* centers checkbox + text */
+  justify-content: center;
+  gap: 6px;
   margin: 8px 0;
   font-size: 14px;
   color: #333;
-  gap: 6px; /* space between checkbox and text */
 }
 .show-pass input {
   width: 16px;
   height: 16px;
-  accent-color: #e91e63; /* ❤️ makes checkbox pink */
+  accent-color: #e91e63;
 }
 #lockscreen {
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(135deg, #ffdde1, #ee9ca7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  overflow: hidden;
   transition: opacity 0.8s ease, transform 0.8s ease;
 }
+
 #lockscreen.fade-out {
   opacity: 0;
   transform: scale(1.1);
@@ -723,63 +695,6 @@ body.lock-scroll {
 
 
 </style>
-
-<script>
-
-  document.body.style.overflow = "hidden"; // disable scrolling
-document.body.style.overflow = "auto"; // re-enable scrolling
-
-
-  window.addEventListener('DOMContentLoaded', () => {
-  document.getElementById('passInput').focus();
-});
-
-  const heartsBg = document.getElementById("hearts-bg");
-
-setInterval(() => {
-  const heart = document.createElement("div");
-  heart.classList.add("heart");
-  heart.textContent = "❤️";
-  heart.style.left = Math.random() * 100 + "vw";
-  heartsBg.appendChild(heart);
-
-  setTimeout(() => heart.remove(), 6000);
-}, 1000);
-
-const correctPass = "19thBirthday";
-
-function checkPass() {
-  const input = document.getElementById("passInput").value.trim();
-  const error = document.getElementById("error");
-
-  if(input === correctPass){
-  const lockscreen = document.getElementById("lockscreen");
-  lockscreen.classList.add("fade-out");
-  setTimeout(() => { lockscreen.style.display = "none"; }, 800);
-  const playBtn = document.getElementById("playGiftBtn");
-  playBtn.disabled = false;
-}
-else {
-    error.style.display = "block";
-document.getElementById("passInput").focus();
-
-    setTimeout(()=> { error.style.display = "none"; }, 3000);
-  }
-}
-
-document.getElementById("showPass").addEventListener("change", (e) => {
-  const input = document.getElementById("passInput");
-  input.type = e.target.checked ? "text" : "password";
-});
-
-
-
-// Enter key triggers unlock
-document.getElementById("passInput").addEventListener("keypress", function(e){
-  if(e.key === "Enter") checkPass();
-});
-
-</script>
 
   <main class="wrap">
     <!-- COVER -->
@@ -1400,6 +1315,56 @@ document.getElementById("playGiftBtn").addEventListener("click", function() {
   document.getElementById("gift-unlocks").scrollIntoView({ behavior: "smooth" });
 });
 
+document.addEventListener('DOMContentLoaded', () => {
+  const lockscreen = document.getElementById("lockscreen");
+  const input = document.getElementById("passInput");
+  const showPass = document.getElementById("showPass");
+  const error = document.getElementById("error");
+  const playBtn = document.getElementById("playGiftBtn");
+  const correctPass = "19thBirthday";
+
+  // Lock scroll initially
+  document.body.classList.add("lock-scroll");
+  input.focus();
+
+  // Show/hide password
+  showPass.addEventListener("change", (e) => {
+    input.type = e.target.checked ? "text" : "password";
+  });
+
+  // Unlock function
+  function unlock() {
+    if(input.value.trim() === correctPass){
+      lockscreen.classList.add("fade-out");
+      document.body.classList.remove("lock-scroll");
+      setTimeout(() => { lockscreen.style.display = "none"; }, 800);
+      if(playBtn) playBtn.disabled = false;
+    } else {
+      error.style.display = "block";
+      input.focus();
+      setTimeout(()=> { error.style.display = "none"; }, 3000);
+    }
+  }
+
+  // Button click
+  document.querySelector("#lockscreen button").addEventListener("click", unlock);
+
+  // Enter key
+  input.addEventListener("keypress", (e) => {
+    if(e.key === "Enter") unlock();
+  });
+
+  // Hearts background
+  const heartsBg = document.getElementById("hearts-bg");
+  setInterval(() => {
+    const heart = document.createElement("div");
+    heart.className = "heart";
+    heart.textContent = "❤️";
+    heart.style.left = Math.random() * 100 + "vw";
+    heartsBg.appendChild(heart);
+    setTimeout(() => heart.remove(), 6000);
+  }, 1000);
+});
 
 </script>
 
