@@ -18,6 +18,13 @@ window.addEventListener("load", function() {
 </script>
 
   <style>
+    #lock-screen input {
+  width: 80%;
+  max-width: 300px;
+  padding: 10px;
+  font-size: 16px;
+}
+
     #passcode-overlay {
     position: fixed;
     top: 0;
@@ -71,6 +78,20 @@ window.addEventListener("load", function() {
   justify-content:center;
   align-items:center;
 }
+
+#lock-screen {
+  position: fixed; /* stay in place */
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh; /* full viewport height */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0,0,0,0.9); /* dark overlay */
+  z-index: 9999; /* above everything */
+}
+
 
 .gift-intro {
     font-size: 1.2rem;       /* bigger text */
@@ -698,7 +719,10 @@ body.lock-scroll {
 </style>
 
 <script>
-  
+
+  document.body.style.overflow = "hidden"; // disable scrolling
+document.body.style.overflow = "auto"; // re-enable scrolling
+
 
   window.addEventListener('DOMContentLoaded', () => {
   document.getElementById('passInput').focus();
