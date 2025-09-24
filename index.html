@@ -390,11 +390,10 @@ window.addEventListener("load", function() {
     <h2>🔐 Enter Your Secret Love Code</h2>
     <input type="password" id="passInput" placeholder="💖 Type your secret..." autocomplete="off">
     <label class="show-pass">
-  <input type="checkbox" id="showPass">
-  <span>Show Passcode</span>
-</label>
-
-    <button onclick="checkPass()">Unlock 💌</button>
+      <input type="checkbox" id="showPass">
+      <span>Show Passcode</span>
+    </label>
+    <button id="unlockBtn">Unlock 💌</button>
     <p id="error" style="color:red;display:none;">Wrong passcode. Try again!</p>
   </div>
 </div>
@@ -402,35 +401,41 @@ window.addEventListener("load", function() {
 
 
 <style>
-  .lock-card {
-  background: white;
-  padding: 30px;
-  border-radius: 16px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-  text-align: center;
-  font-family: Poppins, sans-serif;
-  width: 90%;
-  max-width: 350px;
-}
+ .lock-card {
+    background: white;
+    padding: 30px;
+    border-radius: 16px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    text-align: center;
+    font-family: Poppins, sans-serif;
+    width: 90%;
+    max-width: 350px;
+  }
 
 .lock-card input {
-  padding: 12px;
-  width: 100%;
-  border: 2px solid #e91e63;
-  border-radius: 8px;
-  margin-bottom: 12px;
-  font-size: 16px;
-  text-align: center;
-}
+    padding: 12px;
+    width: 100%;
+    border: 2px solid #e91e63;
+    border-radius: 8px;
+    margin-bottom: 12px;
+    font-size: 16px;
+    text-align: center;
+    outline: none;
+  }
   .lock-card button {
-  padding: 12px 20px;
-  border: none;
-  border-radius: 8px;
-  background: linear-gradient(90deg,#e91e63,#b00047);
-  color: white;
-  font-weight: 600;
-  cursor: pointer;
-}
+    padding: 12px 20px;
+    border: none;
+    border-radius: 8px;
+    background: linear-gradient(90deg,#e91e63,#b00047);
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.2s;
+  }
+   .lock-card button:hover {
+    transform: scale(1.05);
+  }
+
   #passInput {
   padding: 12px;
   width: 200px;
@@ -447,37 +452,43 @@ window.addEventListener("load", function() {
   box-shadow: 0 4px 12px rgba(233,30,99,0.4);
   transform: scale(1.02);
 }
-.show-pass {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  margin: 8px 0;
-  font-size: 14px;
-  color: #333;
-}
-.show-pass input {
-  width: 16px;
-  height: 16px;
-  accent-color: #e91e63;
-}
-#lockscreen {
-  position: fixed;
-  inset: 0;
-  background: linear-gradient(135deg, #ffdde1, #ee9ca7);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 9999;
-  overflow: hidden;
-  transition: opacity 0.8s ease, transform 0.8s ease;
-}
+ .show-pass {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    margin: 8px 0;
+    font-size: 14px;
+    color: #333;
+  }
 
-#lockscreen.fade-out {
-  opacity: 0;
-  transform: scale(1.1);
-  pointer-events: none;
-}
+  .show-pass input {
+    width: 16px;
+    height: 16px;
+    accent-color: #e91e63;
+  }
+ #lockscreen {
+    position: fixed;
+    inset: 0;
+    background: linear-gradient(135deg, #ffdde1, #ee9ca7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    overflow: hidden;
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+
+ #lockscreen.fade-out {
+    opacity: 0;
+    transform: scale(1.1);
+    pointer-events: none;
+  }
+
+  body.lock-scroll {
+    overflow: hidden;
+  }
+
 #muteBtn {
   position: fixed;
   top: 20px;
@@ -528,35 +539,18 @@ video {
   margin: 0 auto;        /* center the video in its container */
 }
 
-#hearts-bg {
-  position: fixed;
-  inset: 0;
-  pointer-events: none; /* hearts don’t block clicks */
-  z-index: 0;           /* stays behind all content */
-}
-
-.cover-card,
-.card,
-.timeline-item,
-.polaroid,
-.envelope-wrap,
-footer {
-  position: relative;  /* ensure these appear above hearts */
-  z-index: 1;
-}
-
-.heart {
-  position: absolute;
-  color: #ff4d6d;
-  font-size: 24px;
-  bottom: -30px; /* start just below the viewport */
-  animation: floatUp 6s linear infinite;
-}
-
-@keyframes floatUp {
-  0% { transform: translateY(0) scale(1); opacity: 1; }
-  100% { transform: translateY(-110vh) scale(1.5); opacity: 0; }
-}
+  #hearts-bg { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
+  .heart {
+    position: absolute;
+    color: #ff4d6d;
+    font-size: 24px;
+    bottom: -30px;
+    animation: floatUp 6s linear infinite;
+  }
+  @keyframes floatUp {
+    0% { transform: translateY(0) scale(1); opacity: 1; }
+    100% { transform: translateY(-110vh) scale(1.5); opacity: 0; }
+  } 
 
 .reveal {
   opacity: 0;
@@ -1316,11 +1310,11 @@ document.getElementById("playGiftBtn").addEventListener("click", function() {
 });
 
 document.addEventListener('DOMContentLoaded', () => {
-  const lockscreen = document.getElementById("lockscreen");
-  const input = document.getElementById("passInput");
-  const showPass = document.getElementById("showPass");
-  const error = document.getElementById("error");
-  const playBtn = document.getElementById("playGiftBtn");
+  const lockscreen = document.getElementById('lockscreen');
+  const input = document.getElementById('passInput');
+  const showPass = document.getElementById('showPass');
+  const error = document.getElementById('error');
+  const unlockBtn = document.getElementById('unlockBtn');
   const correctPass = "19thBirthday";
 
   // Lock scroll initially
@@ -1328,8 +1322,8 @@ document.addEventListener('DOMContentLoaded', () => {
   input.focus();
 
   // Show/hide password
-  showPass.addEventListener("change", (e) => {
-    input.type = e.target.checked ? "text" : "password";
+  showPass.addEventListener('change', () => {
+    input.type = showPass.checked ? "text" : "password";
   });
 
   // Unlock function
@@ -1338,7 +1332,6 @@ document.addEventListener('DOMContentLoaded', () => {
       lockscreen.classList.add("fade-out");
       document.body.classList.remove("lock-scroll");
       setTimeout(() => { lockscreen.style.display = "none"; }, 800);
-      if(playBtn) playBtn.disabled = false;
     } else {
       error.style.display = "block";
       input.focus();
@@ -1346,11 +1339,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // Button click
-  document.querySelector("#lockscreen button").addEventListener("click", unlock);
+  unlockBtn.addEventListener('click', unlock);
 
-  // Enter key
-  input.addEventListener("keypress", (e) => {
+  input.addEventListener('keypress', (e) => {
     if(e.key === "Enter") unlock();
   });
 
@@ -1365,6 +1356,7 @@ document.addEventListener('DOMContentLoaded', () => {
     setTimeout(() => heart.remove(), 6000);
   }, 1000);
 });
+
 
 </script>
 
