@@ -367,6 +367,8 @@ window.addEventListener("load", function() {
 </head>
 <body>
   <div id="hearts-bg"></div>
+  <div id="whisper-container"></div>
+
 
 
 <!-- PASSCODE SCREEN -->
@@ -547,18 +549,10 @@ video {
   margin: 0 auto;        /* center the video in its container */
 }
 
-  #hearts-bg { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
-  .heart {
-    position: absolute;
-    color: #ff4d6d;
-    font-size: 24px;
-    bottom: -30px;
-    animation: floatUp 6s linear infinite;
-  }
-  @keyframes floatUp {
-    0% { transform: translateY(0) scale(1); opacity: 1; }
-    100% { transform: translateY(-110vh) scale(1.5); opacity: 0; }
-  } 
+  /* your existing styles... */
+
+/* ---- Hearts Background ---- */
+
 
 .reveal {
   opacity: 0;
@@ -796,48 +790,141 @@ body.lock-scroll {
 }
 
 
-/* WISH WALL */
-.wish-container {
-  position: relative;
-  width: 100%;
-  height: 60vh;
-  background: linear-gradient(135deg, #ffdde1, #ee9ca7);
-  overflow: hidden;
-  border-radius: 1rem;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-}
 
-.wish {
-  position: absolute;
-  padding: 0.6rem 1rem;
-  background: white;
-  border-radius: 12px;
-  font-size: 1rem;
-  font-weight: 500;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-  animation: floatUp 12s linear infinite;
-}
 
-@keyframes floatUp {
-  0% { transform: translateY(100vh) rotate(5deg); opacity: 0; }
-  10% { opacity: 1; }
-  90% { opacity: 1; }
-  100% { transform: translateY(-20vh) rotate(-5deg); opacity: 0; }
-}
-
-.envelope-message {
-  text-align: center;
-  font-family: 'Great Vibes', cursive;
-  font-size: 1.4rem;
-  color: #ff4d6d;
-  margin-bottom: 1rem;
-  animation: glow 2s infinite alternate;
-}
 
 @keyframes glow {
   from { text-shadow: 0 0 8px rgba(255,77,109,0.6); }
   to   { text-shadow: 0 0 15px rgba(255,77,109,0.9); }
 }
+
+.envelope {
+  position: relative; /* so we can place text on it */
+}
+
+.envelope-text {
+  position: absolute;
+  top: calc(50% + 1cm); /* move it 2cm lower */
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: 'Great Vibes', cursive;
+  font-size: 1.6rem;
+  color: #f74163;
+  text-align: center;
+  pointer-events: none; /* so clicks still open the envelope */
+  animation: fadePulse 2.5s infinite;
+}
+
+@keyframes fadePulse {
+  0% { opacity: 0.6; transform: translate(-50%, -50%) scale(1); }
+  50% { opacity: 1; transform: translate(-50%, -50%) scale(1.05); }
+  100% { opacity: 0.6; transform: translate(-50%, -50%) scale(1); }
+}
+
+#hearts-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none; /* don't block clicks */
+  overflow: hidden;
+  z-index: -1; /* behind lockscreen */
+}
+
+.heart {
+  position: absolute;
+  bottom: -20px;
+  font-size: 20px;
+  animation: floatUp 6s linear forwards;
+}
+
+@keyframes floatUp {
+  0% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+  100% {
+    transform: translateY(-110vh) scale(1.5);
+    opacity: 0;
+  }
+}
+
+.romantic-guide {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.8);
+  background: linear-gradient(135deg, #ffb6c1, #ff69b4);
+  padding: 20px 30px;
+  border-radius: 20px;
+  font-size: 18px;
+  font-family: "Poppins", sans-serif;
+  color: #fff;
+  text-align: center;
+  box-shadow: 0 8px 25px rgba(255, 105, 180, 0.4);
+  z-index: 10000;
+  opacity: 0;
+  pointer-events: none;
+  animation: none;
+}
+
+/* Show animation */
+.romantic-guide.show {
+  animation: popIn 1.2s ease forwards, fadeOut 1s ease 6s forwards;
+}
+
+/* Keyframes for pop in */
+@keyframes popIn {
+  0% {
+    transform: translate(-50%, -50%) scale(0.5);
+    opacity: 0;
+  }
+  70% {
+    transform: translate(-50%, -50%) scale(1.1);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+}
+
+/* Keyframes for fade out */
+@keyframes fadeOut {
+  to {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.9);
+  }
+}
+
+
+/* Whisper notes */
+#whisper-container {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.whisper {
+  position: absolute;
+  font-family: 'Great Vibes', cursive;
+  font-size: 22px;
+  color: rgba(255,255,255,0.9);
+  animation: floatWhisper 6s ease forwards;
+}
+
+@keyframes floatWhisper {
+  from { transform: translateY(100vh); opacity: 0; }
+  30% { opacity: 1; }
+  to { transform: translateY(-20vh); opacity: 0; }
+}
+
 
 </style>
 
@@ -862,6 +949,15 @@ body.lock-scroll {
 
       </div>
     </section>
+
+    <div id="romantic-guide" class="romantic-guide">
+  💌 My Love,<br>
+  Don’t rush…  
+  Read each chapter slowly, one by one.  
+  Every scroll is like turning a page of our love story ❤️✨
+</div>
+
+
 
     <section id="gift-unlocks">
   <section id="gift-unlocks">
@@ -1181,6 +1277,17 @@ body.lock-scroll {
             <div class="text">The day you were so beautiful in that red saree - The Goddess.</div>
           </div>
         </div>
+        <br>
+        <br>
+
+        <div class="timeline-item timeline-left reveal">
+          <div>
+            <div class="date">Our First Outing and Movie together- 10:11:2024 </div>
+            <div class="text">Amaran in VR mall right...We laughed so much that day — it felt like the world paused for us.</div>
+          </div>
+        </div>
+        <br>
+        <br>
       </div>
     </section>
 
@@ -1252,7 +1359,7 @@ body.lock-scroll {
 
   <div id="quiz-container">
     <div class="quiz-question" data-index="0">
-      <p>1️⃣ When did you first see me?</p>
+      <p> When did you first see me?</p>
       <div class="options">
         <button class="option">Sept 09</button>
         <button class="option">Sept 05</button>
@@ -1263,7 +1370,7 @@ body.lock-scroll {
     </div>
 
     <div class="quiz-question" data-index="1">
-      <p>2️⃣ Where did I first see you?</p>
+      <p> Where did I first see you?</p>
       <div class="options">
         <button class="option">Sept 14</button>
         <button class="option">Sept 09</button>
@@ -1274,7 +1381,7 @@ body.lock-scroll {
     </div>
 
     <div class="quiz-question" data-index="2">
-      <p>2️⃣ When is our Anniversay?</p>
+      <p> When is our Anniversay?</p>
       <div class="options">
         <button class="option">Sept 14</button>
         <button class="option">Sept 09</button>
@@ -1285,7 +1392,7 @@ body.lock-scroll {
     </div>
 
     <div class="quiz-question" data-index="3">
-      <p>2️⃣ What's the first gift I gave you?</p>
+      <p> What's the first gift I gave you?</p>
       <div class="options">
         <button class="option">Dairy Milk </button>
         <button class="option">Chocolates</button>
@@ -1296,12 +1403,34 @@ body.lock-scroll {
     </div>
 
     <div class="quiz-question" data-index="4">
-      <p>2️⃣ What shirt did I wear when I saw you first ?</p>
+      <p> What shirt did I wear when I saw you first ?</p>
       <div class="options">
         <button class="option">Pink linen</button>
         <button class="option">Beige striped</button>
         <button class="option">Blue Linen</button>
         <button class="option">White shirt blue striped</button>
+      </div>
+      <p class="quiz-feedback"></p>
+    </div>
+
+    <div class="quiz-question" data-index="5">
+      <p> What's my favourite cake?</p>
+      <div class="options">
+        <button class="option">Lava </button>
+        <button class="option">Truffle</button>
+        <button class="option">Brownie</button>
+        <button class="option">Black Forest</button>
+      </div>
+      <p class="quiz-feedback"></p>
+    </div>
+
+    <div class="quiz-question" data-index="6">
+      <p> Which spot I love the most to go with you?</p>
+      <div class="options">
+        <button class="option">Theatre</button>
+        <button class="option">Beach</button>
+        <button class="option">Mall</button>
+        <button class="option">Restaurant</button>
       </div>
       <p class="quiz-feedback"></p>
     </div>
@@ -1321,45 +1450,36 @@ body.lock-scroll {
 <br>
 <br>
   <ul class="bucket-grid">
-    <li>✈️ Travel to Paris together</li>
-    <li>🍕 Eat midnight pizza date</li>
-    <li>🌸 See cherry blossoms in Japan</li>
-    <li>🎶 Go to a concert we both love</li>
-    <li>🏔️ Trekking adventure</li>
-    <li>🎥 Make a short film together</li>
-    <li>🍨 Try 19 ice cream flavors in a day</li>
+    <li>✈️ Travel together in a flight</li>
+    <li>🍕 A one day trip alone with you in bike or car</li>
+    <li>🌸 Going to your house in Cbe</li>
+    <li>🎶 One full night with you</li>
+    <li>🏔️ Going to Singapore</li>
+    <li>🏔️ Introducing you to my parents</li>
+    <li>🏔️ Confessing our love to everyone</li>
+    <li>🎥 Our Engagement</li>
+    <li>🍨 Finally our marriage</li>
   </ul>
 </section>
  <br>
  <br>
 
- <!-- WISH WALL -->
-<section id="wish-wall" class="section">
-  <div class="section-title">
-    <div class="small">Chapter 7</div>
-    <h2>Birthday Wishes For You 🎉</h2>
-  </div>
-  <div class="wish-container" id="wishContainer"></div>
-</section>
-<br>
-<br>
+
+ 
     <!-- SURPRISE -->
     <section id="surprise">
       <div class="section-title">
         <div class="small">Final Chapter</div>
-        <h2>Open Your Letter</h2>
+        <h2>Open Your Letter💌</h2>
       </div>
       <div class="envelope-wrap reveal">
-        <div class="envelope-message">
-  💌 "A secret from my heart is sealed inside... Tap to open." 💌     
-</div>
-
         <div class="envelope" id="envelope" tabindex="0" role="button">
+          <div class="envelope-text">To My Forever Love 💖</div>
           <div class="flap"></div>
           <div class="letter" id="letter">
             <h3>Dear Love,</h3>
             <p>
-              On your last birthday I sent you a small letter like this but couldn't give any memorable gifts. So that's why there are some small 19 gifts for you, and I hope you'll like those. We've been in a relationship together for more than one year, but just in one year we saw many turnovers or hurdles that would've separated us. We have seen many known couples go apart in our college or among our known ones. But whenever I see that, it makes me strong that we're not the ones like them. We love for marriage, not for timepass. We've seen many fights between us and harsh words or actions that we've used. We've seen many tears; sometimes it created hate. Many distractions or some attractions not only for you but also for me. Our past is a past. For both of us it may be a beautiful memory. But we should accept that it's just a memory and it's over. And we should not let that past decide our relationship now because ours is pure. All these days the past controlled us even if we got a god-gifted relationship now. Now let us promise that we're not trapped under our past and it's just a memory which once made us happy. I believe ours is permanent, and even if it looks like a temporary now, we have the power to make it permanent. Our love will be like a fine wine. Time makes us love even more, and we should be patient in everything. With this I don't want to drag on more, but one thing that I want to say is, We've seen many problems in a short span of time that most couples didn't see in many years. But this experience taught us that we won't stop for this fake or illusion fights or problems that try to separate us. One thing that didn't change from my last year's letter is my love and the belief that we'll one day be together officially, and I'm confident in that. Let's believe that one day, we won't just say good morning over texts or calls but truly wake up next to each other. Chapter 20 begins today—and I want every chapter after this to be with you. You are my favourite chapter in my life, and this chapter will travel along with me till the end of my life. "No man sees himself as a hero until he meets his angel." I feel like a hero in a movie, so I found my angel. Thank you, my love, for coming into my life. Thank you for being you. Happy 19th birthday, my love.
+              On your last birthday I sent you a small letter like this but couldn't give any memorable gifts. So that's why there are some small 19 gifts for you, and I hope you'll like those. We've been in a relationship together for more than one year, but just in one year we saw many turnovers or hurdles that would've separated us. We have seen many known couples go apart in our college or among our known ones. But whenever I see that, it makes me strong that we're not the ones like them. We love for marriage, not for timepass. We've seen many fights between us and harsh words or actions that we've used. We've seen many tears; sometimes it created hate. Many distractions or some attractions not only for you but also for me. Our past is a past. For both of us it may be a beautiful memory. But we should accept that it's just a memory and it's over. And we should not let that past decide our relationship now because ours is pure. All these days the past controlled us even if we got a god-gifted relationship now. Now let us promise that we're not trapped under our past and it's just a memory which once made us happy. I believe ours is permanent, and even if it looks like a temporary now, we have the power to make it permanent. Our love will be like a fine wine. Time makes us love even more, and we should be patient in everything. With this I don't want to drag on more, but one thing that I want to say is, We've seen many problems in a short span of time that most couples didn't see in many years. But this experience taught us that we won't stop for this fake or illusion fights or problems that try to separate us. One thing that didn't change from my last year's letter is my love and the belief that we'll one day be together officially, and I'm confident in that. Let's believe that one day, we won't just say good morning over texts or calls but truly wake up next to each other. Chapter 20 begins today—and I want every chapter after this to be with you. You are my favourite chapter in my life, and this chapter will travel along with me till the end of my life. "No man sees himself as a hero until he meets his angel." I feel like a hero in a movie, so I found my angel. Thank you, my love, for coming into my life. Thank you for being you. Happy 19th birthday, my love. 💕
             </p>
             <p style="margin-top:10px;font-weight:600">Always, <br>
               <span style="font-family:'Great Vibes',cursive;font-size:20px">Chellakutti</span></p>
@@ -1383,13 +1503,31 @@ body.lock-scroll {
 
 <script>
 
-  
+  const whispers = [
+  "Every scroll is a heartbeat 💓",
+  "You’re my favorite chapter 📖",
+  "Our love is endless 🌙",
+  "Slow down love, it’s all for you 🌸",
+  "You and me, forever 💍"
+];
+
+setInterval(() => {
+  const whisper = document.createElement("div");
+  whisper.className = "whisper";
+  whisper.textContent = whispers[Math.floor(Math.random()*whispers.length)];
+  whisper.style.left = Math.random() * 80 + "vw";
+  document.getElementById("whisper-container").appendChild(whisper);
+  setTimeout(() => whisper.remove(), 6000);
+}, 10000); // every 10 sec
+
  const quizData = [
   { answer: "Sept 05" }, 
   { answer: "Sept 13" },
   { answer: "Sept 14" },
   { answer: "Clip" },
-  { answer: "Beige striped" } 
+  { answer: "Beige striped" },
+  { answer: "Truffle" },
+  { answer: "Theatre" }
   // add more as needed
 ];
 
@@ -1430,32 +1568,7 @@ document.querySelectorAll('.quiz-question').forEach((question, index) => {
 
 </script>
 
-<script>
-const wishes = [
-  "Happy 19th Birthday my love ❤️",
-  "You make my world brighter 🌸",
-  "To more adventures with you 🌍",
-  "Forever yours 💕",
-  "Keep smiling, it’s my favorite thing 😘",
-  "Best thing that ever happened to me 💖",
-];
 
-const wishContainer = document.getElementById("wishContainer");
-
-function createWish(text) {
-  const div = document.createElement("div");
-  div.className = "wish";
-  div.textContent = text;
-  div.style.left = Math.random() * 80 + "%";
-  wishContainer.appendChild(div);
-  setTimeout(() => div.remove(), 12000);
-}
-
-setInterval(() => {
-  const wish = wishes[Math.floor(Math.random() * wishes.length)];
-  createWish(wish);
-}, 2500);
-</script>
 
   <script>
     
@@ -1668,6 +1781,15 @@ document.getElementById("playGiftBtn").addEventListener("click", function() {
 
   // Smooth scroll to gifts section
   document.getElementById("gift-unlocks").scrollIntoView({ behavior: "smooth" });
+
+  // Show romantic guide message
+// 💖 Show romantic guide message
+const guide = document.getElementById("romantic-guide");
+guide.classList.add("show");
+
+
+
+
 });
 function checkPass() {
   const input = document.getElementById("passInput").value.trim();
@@ -1694,7 +1816,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const showPass = document.getElementById('showPass');
   const error = document.getElementById('error');
   const unlockBtn = document.getElementById('unlockBtn');
-  const correctPass = "19thBirthday";
+  var _0x4a32 = ["\x31\x39\x74\x68\x42\x69\x72\x74\x68\x64\x61\x79"];
+const correctPass = _0x4a32[0];
+
 
   // Lock scroll initially
   document.body.classList.add("lock-scroll");
@@ -1726,14 +1850,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Hearts background
   const heartsBg = document.getElementById("hearts-bg");
-  setInterval(() => {
-    const heart = document.createElement("div");
-    heart.className = "heart";
-    heart.textContent = "❤️";
-    heart.style.left = Math.random() * 100 + "vw";
-    heartsBg.appendChild(heart);
-    setTimeout(() => heart.remove(), 6000);
-  }, 1000);
+
+setInterval(() => {
+  const heart = document.createElement("div");
+  heart.className = "heart";
+  heart.textContent = "❤️";
+
+  // random horizontal position
+  heart.style.left = Math.random() * 100 + "vw";
+  // random size
+  heart.style.fontSize = Math.random() * 20 + 20 + "px";
+
+  heartsBg.appendChild(heart);
+
+  // remove after animation ends
+  setTimeout(() => heart.remove(), 6000);
+}, 1000);
+
 });
 
 
